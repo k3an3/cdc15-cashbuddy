@@ -28,7 +28,7 @@ class User(BaseModel):
         return self.first_name + ' ' + self.last_name
 
 class Session(BaseModel):
-	user = ForeignKeyField(User)
+	user = ForeignKeyField(User, null=True)
 	session_id = CharField()
 
 class Card(BaseModel):

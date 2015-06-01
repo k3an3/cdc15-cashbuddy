@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block head %}
+<title>CashBuddy Registration</title>
+<!-- Custom styles for this template -->
+<link href="/static/css/login.css" rel="stylesheet">
+{% endblock %}
+{% block body %}
+<div class="jumbotron" style="background-image: url('static/img/cash5.jpg'); text-align: center;">
+    <div class="container">
+        <h1>Let's get started!</h1>
+        {% if error %}
+        {{ error }}
+        {% else %}
+        <br><br>
+        {% endif %}
+        <form class="form-signin" method="POST">
+            <label for="first_name" class="sr-only">First Name</label>
+            <input name="first_name" type="text" id="first_name" class="form-control" placeholder="First name" required autofocus>
+            <label for="last_name" class="sr-only">Last Name</label>
+            <input name="last_name" type="text" id="last_name" class="form-control" placeholder="Last name" required autofocus>
+            <label for="inputEmail" class="sr-only">Email address</label>
+            <input name="email" type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+            <label for="inputPassword" class="sr-only">Password</label>
+            <input name="password" type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+            <button class="btn btn-lg btn-success btn-block" type="submit">Register</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block footer %}
+<footer style="text-align:center;">
+    <p>&copy; CashBuddy 2015</p>
+</footer>
+{% endblock %}

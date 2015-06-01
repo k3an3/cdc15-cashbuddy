@@ -17,21 +17,26 @@
             <span class="sr-only">Error:</span>
             {{ error }}
         </div>
+        {% elif message %}
+        <div class="alert alert-success" role="alert">
+        <span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>
+        <span class="sr-only">Success:</span>
+        {{ message }}
+        </div>
         {% else %}<br>{% endif %}
         <label for="inputEmail" class="sr-only">Email address</label>
         <input name="email" type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
         <label for="inputPassword" class="sr-only">Password</label>
         <input name="password" type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" value="remember-me"> Remember me
-            </label>
-        </div>
         <button class="btn btn-lg btn-success btn-block" type="submit">Sign in</button>
     </form>
     <div>
         <br>or<br><br>
         <a href="/register"><button class="btn btn-md btn-default">Register</button></a>
     </div>
-</div> <!-- /container -->
+{% endblock %}
+{% block footer %}
+<footer style="text-align:center;">
+    <p>&copy; CashBuddy 2015</p>
+</footer>
 {% endblock %}

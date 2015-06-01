@@ -28,31 +28,39 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="#"><img src="/static/img/cb.png" width="30px" height="30px" style="float:left;"/><img src="/static/img/cashbuddy_small.png" alt="CashBuddy"/></a>
+                    <a class="navbar-brand" href="/"><img src="/static/img/cb.png" width="30px" height="30px" style="float:left;"/><img src="/static/img/cashbuddy_small.png" alt="CashBuddy" style="float:left;"/></a>
                 </div>
                 <div id="navbar" class="navbar-collapse collapse">
-                    <form class="navbar-form navbar-right">
+                {% if not user %}
+                    <form class="navbar-form navbar-right" method="POST" action="/login">
                         <div class="form-group">
-                            <input type="text" placeholder="Email or username" class="form-control">
+                            <input name="email" type="text" placeholder="Email" class="form-control">
                         </div>
                         <div class="form-group">
-                            <input type="password" placeholder="Password" class="form-control">
+                            <input name="password" type="password" placeholder="Password" class="form-control">
                         </div>
                         <button type="submit" class="btn btn-success">Sign in</button>
                     </form>
+                {% else %}
+                    <div class="navbar-form navbar-right">
+                        <a href="/account"><button class="btn btn-success">My Account</button></a>
+                        <a href="/logout"><button class="btn btn-success">Logout</button></a>
+                    </div>
+                {% endif %}
                 </div><!--/.navbar-collapse -->
             </div>
         </nav>
         {% endblock %}
+        </div>
 
         {% block body %}
         {% endblock %}
-    <hr>
-
-    <footer>
-        <p>&copy; CashBuddy 2015</p>
-    </footer>
-</div> <!-- /container -->
+        <hr>
+        {% block footer %}
+        <footer>
+            <p>&copy; CashBuddy 2015</p>
+        </footer>
+        {% endblock %}
 
 <!-- Bootstrap core JavaScript
 ================================================== -->
