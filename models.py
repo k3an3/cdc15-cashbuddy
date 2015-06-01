@@ -7,7 +7,7 @@ db = SqliteDatabase('app.db')
 def db_init():
     db.connect()
     try:
-        db.create_tables([User, Card, Transaction])
+        db.create_tables([User, Card, Transaction, Session,])
         print('Creating tables...')
     except OperationalError:
         pass
@@ -27,13 +27,17 @@ class User(BaseModel):
     def get_full_name(self):
         return self.first_name + ' ' + self.last_name
 
+class Session(BaseModel):
+	user = ForeignKeyField(User)
+	session_id = CharField()
+
 class Card(BaseModel):
-    user = ForeignKeyField(User, related_name='card')
+    user = ForeignKeyField(User)
     number = CharField(null=False)
     pin = CharField(null=False)
 
 class Transaction(BaseModel):
-    user = ForeignKeyField(User, related_name='transaction')
+    user = ForeignKeyField(User)
     txid = CharField()
     amount = IntegerField(default=0)
     paid = BooleanField(default=False)
