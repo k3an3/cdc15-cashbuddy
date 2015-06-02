@@ -10,13 +10,14 @@ app = Flask(__name__)
 def get_user(f):
 	@wraps(f)
 	def decorated_function(*args, **kwargs):
+		session = None
 		user = None
-		print(request.cookies)
 		try:
-			user = Session.get(session_id=request.cookies.get('session_id')).user
+			session = Session.get(session_id=request.cookies.get('session_id'))
+			user = session.user
 		except Session.DoesNotExist:
-			print('fail')
-		return f(user=user)
+			pass
+		return f(user=user, session=session)
 	return decorated_function
 
 
@@ -32,7 +33,7 @@ def begin_transaction():
     postback = request.form.get('postback')
     amount = num(request.form.get('amount'))
     if txid and postback and amount:
-        pass
+        return "UNIMPLEMENTED"
     abort(401)
 
 @app.route("/validate_transaction", methods=['GET'])
@@ -65,6 +66,16 @@ def login():
 		message = "Registration complete! You may now login."
 	return render_template('login.html', **locals())
 
+@app.route("/logout", methods=['GET'])
+@get_user
+def logout(*args, **kwargs):
+	user = kwargs.get('user')
+	session = kwargs.get('session')
+	session.active = False
+	response = make_response(redirect('/?logout=true'))
+	response.set_cookie('session_id', '', expires=0)
+	return response
+
 @app.route("/register", methods=['GET', 'POST'])
 def register():
 	if request.method == 'POST':
@@ -77,8 +88,9 @@ def register():
 	return render_template('register.html', **locals())
 
 @app.route("/account")
-def account():
-	user = Session.get(session_id=request.cookies.get('session_id')).user
+@get_user
+def account(*args, **kwargs):
+	user = kwargs.get('user')
 	return render_template('account.html', **locals())
 
 # This hook ensures that a connection is opened to handle any queries

@@ -30,6 +30,7 @@ class User(BaseModel):
 class Session(BaseModel):
 	user = ForeignKeyField(User, null=True)
 	session_id = CharField()
+	active = BooleanField(default=True)
 
 class Card(BaseModel):
     user = ForeignKeyField(User)
