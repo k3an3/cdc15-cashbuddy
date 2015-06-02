@@ -9,7 +9,7 @@ def db_init():
     try:
         db.create_tables([User, Card, Transaction, Session,])
         print('Creating tables...')
-    except OperationalError:
+    except (OperationalError, InternalError):
         pass
     db.close()
 
