@@ -50,18 +50,16 @@ def login():
 		try:
 			user = User.select().where(User.email == request.form.get('email'))[0]
 			password = request.form.get('password')
-			if user and user.password == get_salted_password(password):
+			if user.password == get_salted_password(password):
 				session_id = request.cookies.get('session_id', generate_session_id())
 				session = Session(user=user, session_id=session_id)
 				session.save()
 				response = make_response(redirect('/account'))
 				response.set_cookie('session_id', session_id)
 				return response
-		except User.DoesNotExist:
-			pass
-		except IndexError:
-			pass
-		error = "The email and password you entered do not match."
+			error = "The password is incorrect."
+		except (User.DoesNotExist, IndexError):
+			error = "The user doesn't exist."
 	if request.args.get('registered'):
 		message = "Registration complete! You may now login."
 	return render_template('login.html', **locals())
@@ -91,6 +89,9 @@ def register():
 @get_user
 def account(*args, **kwargs):
 	user = kwargs.get('user')
+	recent_transactions = Transaction.select().where(
+		Transaction.date.day + 3 >= datetime.datetime.now().day).order_by(Transaction.date.desc())[:6]
+	cards = Card.select()
 	return render_template('account.html', **locals())
 
 # This hook ensures that a connection is opened to handle any queries

@@ -1,11 +1,65 @@
 {% extends "base.html" %}
-{% block head %}
-<title>My Account | CashBuddy</title>
-{% endblock %}
 {% block body %}
+<div class="jumbotron" style="background-color: #3BB83B; color: white; height: 200px;">
+    <div class="container">
+        <h1>Welcome, {{ user.first_name }}</h1>
+        <p>You currently have ${{ '%0.2f' | format(user.balance|float) }} in your account.</p>
+    </div>
+</div>
+<script type="text/javascript">
+    window.onload = function(){
+        var c = document.getElementsByClassName('cardnum');
+        for (var i = 0; i<c.length; i++) {
+            var s = c[i].textContent;
+            c[i].textContent = "************" + s.substring(s.length-4, s.length);
+        }
+    };
+</script>
+
 <div class="container">
     <div class="row">
-        <p>Welcome, {{ user.first_name }}!</p>
+        <div class="col-md-5">
+            <h3>Recent Activity</h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Amount</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for t in recent_transactions %}
+                    <tr>
+                        <td>{{ t.dest }}</td>
+                        <td>${{ '%0.2f' | format(t.amount|float) }}</td>
+                        <td>{{ t.date.strftime('%H:%M %m-%d-%Y') }}</td>
+                        <td><span class="label label-{% if t.paid %}success">PAID{% else %}danger">UNPAID{% endif %}</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-3">
+            <h3>Payment Options</h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Card</th>
+                        <th>Expires</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in cards%}
+                    <tr>
+                        <td class="cardnum">{{ c.number }}</td>
+                        <td>{{ c.expires.strftime('%m-%y') }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 {% endblock %}

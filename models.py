@@ -21,7 +21,7 @@ class User(BaseModel):
     first_name = CharField(null=False)
     last_name = CharField(null=False)
     email = CharField(null=False)
-    balance = IntegerField(default=0)
+    balance = DecimalField(default=0)
     password = CharField()
 
     def get_full_name(self):
@@ -33,12 +33,16 @@ class Session(BaseModel):
 	active = BooleanField(default=True)
 
 class Card(BaseModel):
-    user = ForeignKeyField(User)
-    number = CharField(null=False)
-    pin = CharField(null=False)
+	name = CharField(null=False)
+	user = ForeignKeyField(User)
+	number = CharField(null=False)
+	pin = CharField(null=False)
+	expires = DateTimeField(default=datetime.datetime.now()+datetime.timedelta(days=600))
 
 class Transaction(BaseModel):
     user = ForeignKeyField(User)
+    dest = CharField()
     txid = CharField()
-    amount = IntegerField(default=0)
+    amount = DecimalField(default=0)
     paid = BooleanField(default=False)
+    date = DateTimeField(default=datetime.datetime.now())

@@ -31,7 +31,7 @@
                     <a class="navbar-brand" href="/"><img src="/static/img/cb.png" width="30px" height="30px" style="float:left;"/><img src="/static/img/cashbuddy_small.png" alt="CashBuddy" style="float:left;"/></a>
                 </div>
                 <div id="navbar" class="navbar-collapse collapse">
-                {% if not user %}
+                    {% if not user %}
                     <form class="navbar-form navbar-right" method="POST" action="/login">
                         <div class="form-group">
                             <input name="email" type="text" placeholder="Email" class="form-control">
@@ -41,12 +41,12 @@
                         </div>
                         <button type="submit" class="btn btn-success">Sign in</button>
                     </form>
-                {% else %}
+                    {% else %}
                     <div class="navbar-form navbar-right">
                         <a href="/account"><button class="btn btn-success">My Account</button></a>
                         <a href="/logout"><button class="btn btn-default">Logout</button></a>
                     </div>
-                {% endif %}
+                    {% endif %}
                 </div><!--/.navbar-collapse -->
             </div>
         </nav>
@@ -61,10 +61,10 @@
             </footer>
         </div>
         {% endblock %}
-<!-- Bootstrap core JavaScript
+        <!-- Bootstrap core JavaScript
 ================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-<script src="/static/dist/js/bootstrap.min.js"></script>
-</body>
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script src="/static/dist/js/bootstrap.min.js"></script>
+    </body>
 </html>
