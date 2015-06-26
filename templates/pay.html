@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block head %}
+<title>Pay Now | CashBuddy</title>
+<!-- Custom styles for this template -->
+{% endblock %}
+{% block navbar %}
+{% endblock %}
+{% block body %}
+    {% if debug %}
+    <script>alert('TXID: {{ txid }}\nPostback: {{ postback }}\nAmount:{{ amount }}');</script>
+    {% endif %}
+
+    <body>
+        <div class="container">
+
+            <div class="page-header" style="text-align:center;">
+                <h1>Pay Now with CashBuddy</h1>
+                <p class="lead">It's that easy.</p>
+            </div>
+            {% if user %}
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <h3>Ready to pay, {{ user.first_name }}?</h3>
+                    <p>Choose a payment method to pay with.</p>
+                    <p><strong>Pay to:</strong> {{ dest }}</p>
+                    <p><strong>Amount:</strong> ${{ amount }}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Value</th>
+                                <th>Select</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for c in payment_options %}
+                            <tr>
+                                <td>Card</td>
+                                <td>{{ c.number[:-4] }}</td>
+                                <td><input type="checkbox" name="{{ card.number}}"></td>
+                            </tr>
+                            {% endfor %}
+                            <tr>
+                                <td>Balance</td>
+                                <td>${{ user.balance}}</td>
+                                <td>{% if user.balance - amount >= 0 %}<input type="checkbox" name="balance">{% else %}<span class="label label-danger">Not Enough</span>{% endif %}</td>
+                                <tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-4"></div>
+            </div>
+            <p id="new_balance"></p>
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-4" style="text-align:center;">
+                    <button type="button" class="btn btn-success">Pay</button>
+                </div>
+            </div>
+            {% endif %}
+            {% endblock %}

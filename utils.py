@@ -1,9 +1,9 @@
-import datetime, random
+import datetime, random, requests
 
 def num(s):
     try:
         return int(s)
-    except ValueError:
+    except (ValueError, TypeError):
         return None
 
 def generate_session_id():
@@ -11,3 +11,11 @@ def generate_session_id():
 
 def get_salted_password(password):
 	return password + 'sajd134kj2rv423J2z3@$#mnfmdj3m2Dn3ehfjdnklm$@#REKGlhjkJFDcdsjkh'
+
+def do_postback(txid, postback):
+    url = 'http://' + postback
+    data = {
+            'txid': txid,
+            'paid': 'TRUE',
+            }
+    r = requests.post(url, data=data)

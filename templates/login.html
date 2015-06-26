@@ -8,7 +8,7 @@
 {% endblock %}
 {% block body %}
 <div class="container" style="text-align: center;">
-    <form class="form-signin" method="POST">
+    <form class="form-signin" method="POST" action="/login">
         <img src="/static/img/cashbuddy_small.png">
         <br><br>
         {% if error %}
@@ -28,6 +28,10 @@
         <input name="email" type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
         <label for="inputPassword" class="sr-only">Password</label>
         <input name="password" type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+        <input type="hidden" name="txid" value="{{ txid }}">
+        <input type="hidden" name="postback" value="{{ postback }}">
+        <input type="hidden" name="amount" value="{{ amount }}">
+        <input type="hidden" name="next" value="{{ next_page }}">
         <button class="btn btn-lg btn-success btn-block" type="submit">Sign in</button>
     </form>
     <div>

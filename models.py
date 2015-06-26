@@ -46,3 +46,6 @@ class Transaction(BaseModel):
     amount = DecimalField(default=0)
     paid = BooleanField(default=False)
     date = DateTimeField(default=datetime.datetime.now())
+
+class Comment(BaseModel):
+	text = TextField()

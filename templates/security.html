@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block body %}
+ <div class="container">
+     <br><br><br>
+      <div class="blog-header">
+        <h1 class="blog-title">Carelessly Secure</h1>
+        <p class="lead blog-description">What makes us so secure?</p>
+      </div>
+
+      <div class="row">
+
+        <div class="col-sm-8 blog-main">
+
+          <div class="blog-post">
+              <h2>Encryption</h2>
+              This site uses HTTPS, meaning that hackers will not be able to intercept your private information over the network or impersonate our site. To ensure that you are using our most secure connection, make sure you can see all 4 SSL logos below. When in doubt, you can always come back to this page.
+            <hr>
+              <img src="/static/img/ssl1.png"/>
+              <img src="/static/img/ssl2.png"/>
+              <img src="/static/img/ssl3.png"/>
+              <img src="/static/img/ssl4.png"/>
+              <h2>Integrity</h2>
+              In addition to your connection, all of your private data is encrypted on our servers, so even we can't see it. Your password, credit cards, and other confidential information is safe from everyone, including us.
+              <h2>Compliance</h2>
+              <p>Our company has strict and cutting edge security policy in place so that we are protected from all angles of attack. Our website passes through a vigorous barrage of automated testing in order to ensure that it can't be broken. The OWASP Top 10 is history.</p>
+              <p>In addition to the website, our company network is also extremely secure. It's so secure, we can't even tell you about it.</p>
+            <blockquote>
+              <p><strong>"If it's not CashBuddy, it's not secure."</strong></p>
+            </blockquote>
+          </div>
+          <nav>
+              <p>Still reading?</p>
+              <a class="btn btn-success btn-lg" href="/register" role="button">Sign up NOW&raquo;</a>
+          </nav>
+
+        </div><!-- /.blog-main -->
+
+        <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+          <div class="sidebar-module">
+            <h4>What people are saying</h4>
+            <ol class="list-unstyled">
+                {% for item in comments %}
+                <li>{{ item }}</li>
+                {% endfor %}
+                {% if user %}
+              <li><a href="">Add your own...</a></li>
+                {% endif %}
+            </ol>
+          </div>
+        </div><!-- /.blog-sidebar -->
+
+      </div><!-- /.row -->
+
+    </div><!-- /.container -->
+{% endblock %}
