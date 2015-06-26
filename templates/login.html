@@ -31,13 +31,14 @@
         <input type="hidden" name="txid" value="{{ txid }}">
         <input type="hidden" name="postback" value="{{ postback }}">
         <input type="hidden" name="amount" value="{{ amount }}">
-        <input type="hidden" name="next" value="{{ next_page }}">
+        <input type="hidden" name="next_page" value="{{ next_page }}">
         <button class="btn btn-lg btn-success btn-block" type="submit">Sign in</button>
     </form>
     <div>
         <br>or<br><br>
         <a href="/register"><button class="btn btn-md btn-default">Register</button></a>
     </div>
+</div>
 {% endblock %}
 {% block footer %}
 <footer style="text-align:center;">

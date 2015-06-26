@@ -6,30 +6,46 @@
 {% block navbar %}
 {% endblock %}
 {% block body %}
-    {% if debug %}
-    <script>alert('TXID: {{ txid }}\nPostback: {{ postback }}\nAmount:{{ amount }}');</script>
-    {% endif %}
+{% if debug %}
+<script>alert('TXID: {{ txid }}\nPostback: {{ postback }}\nAmount:{{ amount }}');</script>
+{% endif %}
+<script type="text/javascript">
+window.onload = function(){
+    var c = document.getElementsByClassName('cardnum');
+    for (var i = 0; i<c.length; i++) {
+        var s = c[i].textContent;
+        c[i].textContent = "************" + s.substring(s.length-4, s.length);
+    }
 
-    <body>
-        <div class="container">
+    $('input').click(function() {
+        if ($('#submit_btn').is('.disabled') && $('input:checked').size() == 1)
+            $('#submit_btn').removeClass('disabled');
+        else
+            $('#submit_btn').addClass('disabled');
+    })
+};
+</script>
 
-            <div class="page-header" style="text-align:center;">
-                <h1>Pay Now with CashBuddy</h1>
-                <p class="lead">It's that easy.</p>
+    <div class="container">
+
+        <div class="page-header" style="text-align:center;">
+            <h1>Pay Now with CashBuddy</h1>
+            <p class="lead">It's that easy.</p>
+        </div>
+        {% if user %}
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <h3>Ready to pay, {{ user.first_name }}?</h3>
+                <p>Choose a payment method to pay with.</p>
+                <p><strong>Pay to:</strong> {{ dest }}</p>
+                <p><strong>Amount:</strong> ${{ amount }}</p>
             </div>
-            {% if user %}
-            <div class="row">
-                <div class="col-md-4"></div>
-                <div class="col-md-4">
-                    <h3>Ready to pay, {{ user.first_name }}?</h3>
-                    <p>Choose a payment method to pay with.</p>
-                    <p><strong>Pay to:</strong> {{ dest }}</p>
-                    <p><strong>Amount:</strong> ${{ amount }}</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-4"></div>
-                <div class="col-md-4">
+        </div>
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <form method="" action="/transaction">
                     <table class="table table-striped">
                         <thead>
                             <tr>
@@ -42,8 +58,8 @@
                             {% for c in payment_options %}
                             <tr>
                                 <td>Card</td>
-                                <td>{{ c.number[:-4] }}</td>
-                                <td><input type="checkbox" name="{{ card.number}}"></td>
+                                <td class="cardnum">{{ c.number }}</td>
+                                <td><input type="checkbox" name="{{ c.number }}"></td>
                             </tr>
                             {% endfor %}
                             <tr>
@@ -53,15 +69,16 @@
                                 <tr>
                         </tbody>
                     </table>
-                </div>
-                <div class="col-md-4"></div>
             </div>
-            <p id="new_balance"></p>
-            <div class="row">
-                <div class="col-md-4"></div>
-                <div class="col-md-4" style="text-align:center;">
-                    <button type="button" class="btn btn-success">Pay</button>
-                </div>
+            <div class="col-md-4"></div>
+        </div>
+        <p id="new_balance"></p>
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4" style="text-align:center;">
+                <button type="button" id="submit_btn" class="btn btn-success disabled">Pay securely <span class="glyphicon glyphicon-lock" aria-hidden="true"></span></button>
             </div>
-            {% endif %}
-            {% endblock %}
+                </form>
+        </div>
+        {% endif %}
+        {% endblock %}

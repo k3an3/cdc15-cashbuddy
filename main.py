@@ -30,15 +30,24 @@ def index(*args, **kwargs):
 @app.route("/begin_transaction", methods=['GET', 'POST'])
 @get_user
 def begin_transaction(*args, **kwargs):
+    # Get data from headers if user just logged in
+    t = request.cookies.get('transaction')
+    if t:
+        t = t.split('&')
+        txid = t[0].split('=')[1]
+        postback = t[1].split('=')[1]
+        amount = num(t[2].split('=')[1])
+    # Get data normally; user was already logged in
+    else:
+        txid = request.form.get('txid')
+        postback = request.form.get('postback')
+        amount = num(request.form.get('amount'))
     user = kwargs.get('user') or request.form.get('user')
-    txid = request.form.get('txid')
-    postback = request.form.get('postback')
-    dest = postback
-    amount = num(request.form.get('amount'))
     if not user:
         next_page = '/begin_transaction'
         error = "You need to sign in before you can pay."
         return render_template('login.html', **locals())
+    dest = postback.split('/')[0]
     debug = request.form.get('debug')
     payment_options = Card.select().where(Card.user == user)
     return render_template('pay.html', **locals())
@@ -79,14 +88,14 @@ def login():
                 session_id = request.cookies.get('session_id', generate_session_id())
                 session = Session(user=user, session_id=session_id)
                 session.save()
-                next_page = request.form.get('next')
+                next_page = request.form.get('next_page')
                 redir = next_page if next_page else '/account'
                 response = make_response(redirect(redir))
                 response.set_cookie('session_id', session_id)
                 if next_page:
-                    response.headers['X-Transaction'] = 'txid={0}&postback={1}&amount={2}'.format(
+                    response.set_cookie('transaction', 'txid={0}&postback={1}&amount={2}'.format(
                         request.form.get('txid'), request.form.get('postback'),
-                                request.form.get('amount'))
+                                request.form.get('amount')))
                 return response
             error = "The password is incorrect."
         except (User.DoesNotExist, IndexError):
