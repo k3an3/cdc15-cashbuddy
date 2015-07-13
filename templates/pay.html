@@ -11,13 +11,6 @@
 {% endif %}
 <script type="text/javascript">
 window.onload = function(){
-    var c = document.getElementsByClassName('cardnum');
-    for (var i = 0; i<c.length; i++) {
-        var s = c[i].textContent;
-        c[i].textContent = "************" + s.substring(s.length-4, s.length);
-    }
-    submit_btn();
-
     $('input').click(function() {
         submit_btn();
     })
@@ -25,12 +18,6 @@ window.onload = function(){
     $('#submit_btn').click(function() {
         $('#payform').submit();
     })
-    function submit_btn() {
-        if ($('#submit_btn').is('.disabled') && $('input:checked').size() == 1)
-            $('#submit_btn').removeClass('disabled');
-        else
-            $('#submit_btn').addClass('disabled');
-    }
 };
 </script>
 
@@ -67,7 +54,7 @@ window.onload = function(){
             <div class="col-md-4"></div>
             <div class="col-md-4">
                 <h3>Ready to pay, {{ user.first_name }}?</h3>
-                <p>Choose a payment method to pay with.</p>
+                <p>Click the button to pay.</p>
                 <p><strong>Pay to:</strong> {{ dest }}</p>
                 <p><strong>Amount:</strong> ${{ amount }}</p>
             </div>
@@ -76,29 +63,8 @@ window.onload = function(){
             <div class="col-md-4"></div>
             <div class="col-md-4">
                 <form id="payform" method="POST" action="/transaction">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Type</th>
-                                <th>Value</th>
-                                <th>Select</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for c in payment_options %}
-                            <tr>
-                                <td>Card</td>
-                                <td class="cardnum">{{ c.number }}</td>
-                                <td><input type="checkbox" name="{{ c.number }}"></td>
-                            </tr>
-                            {% endfor %}
-                            <tr>
-                                <td>Balance</td>
-                                <td>${{ user.balance}}</td>
-                                <td>{% if user.balance - amount >= 0 %}<input type="checkbox" name="balance">{% else %}<span class="label label-danger">Not Enough</span>{% endif %}</td>
-                                <tr>
-                        </tbody>
-                    </table>
+                    <p><strong>Account Balance:</strong> ${{ user.balance}}</td>
+                    {% if not user.balance - amount >= 0 %}<span class="label label-danger">Not Enough</span>{% endif %}
                     <input type="hidden" name="txid" value="{{ txid }}">
                     <input type="hidden" name="postback" value="{{ postback }}">
                     <input type="hidden" name="amount" value="{{ amount }}">
@@ -110,7 +76,7 @@ window.onload = function(){
         <div class="row">
             <div class="col-md-4"></div>
             <div class="col-md-4" style="text-align:center;">
-                <button type="button" id="submit_btn" class="btn btn-success disabled">Pay securely <span class="glyphicon glyphicon-lock" aria-hidden="true"></span></button>
+                <button type="button" id="submit_btn" class="btn btn-success{% if not user.balance - amount >= 0 %}disabled{% endif %}">Pay securely <span class="glyphicon glyphicon-lock" aria-hidden="true"></span></button>
             </div>
         </div>
     {% endif %}
