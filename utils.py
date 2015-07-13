@@ -1,4 +1,5 @@
-import datetime, random, requests
+import datetime, random
+from requests_futures.sessions import FuturesSession
 
 def num(s):
     try:
@@ -13,9 +14,11 @@ def get_salted_password(password):
 	return password + 'sajd134kj2rv423J2z3@$#mnfmdj3m2Dn3ehfjdnklm$@#REKGlhjkJFDcdsjkh'
 
 def do_postback(txid, postback):
+    # Do asynchronously with futures so the user doesn't have to wait.
+    session = FuturesSession()
     url = 'http://' + postback
     data = {
             'txid': txid,
             'paid': 'TRUE',
             }
-    r = requests.post(url, data=data)
+    r = session.post(url, data=data)

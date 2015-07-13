@@ -16,18 +16,48 @@ window.onload = function(){
         var s = c[i].textContent;
         c[i].textContent = "************" + s.substring(s.length-4, s.length);
     }
+    submit_btn();
 
     $('input').click(function() {
+        submit_btn();
+    })
+
+    $('#submit_btn').click(function() {
+        $('#payform').submit();
+    })
+    function submit_btn() {
         if ($('#submit_btn').is('.disabled') && $('input:checked').size() == 1)
             $('#submit_btn').removeClass('disabled');
         else
             $('#submit_btn').addClass('disabled');
-    })
+    }
 };
 </script>
 
     <div class="container">
-
+    {% if success %}
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <h3>Done!</h3>
+                <p>Your transaction has been processed successfully. Now what?</p>
+                <a href="/account"><button class="btn btn-success">My Account</button></a>
+                {% if postback %}
+                <a href="http://{{ postback }}"><button class="btn btn-default">Return to Merchant</button></a>
+                {% endif %}
+            </div>
+    {% elif error %}
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <h3>Oops!</h3>
+                <p>{{ error}}</p>
+                <a href="/account"><button class="btn btn-success">My Account</button></a>
+                {% if postback %}
+                <a href="http://{{ postback }}"><button class="btn btn-default">Return to Merchant</button></a>
+                {% endif %}
+            </div>
+    {% else %}
         <div class="page-header" style="text-align:center;">
             <h1>Pay Now with CashBuddy</h1>
             <p class="lead">It's that easy.</p>
@@ -45,7 +75,7 @@ window.onload = function(){
         <div class="row">
             <div class="col-md-4"></div>
             <div class="col-md-4">
-                <form method="" action="/transaction">
+                <form id="payform" method="POST" action="/transaction">
                     <table class="table table-striped">
                         <thead>
                             <tr>
@@ -69,6 +99,10 @@ window.onload = function(){
                                 <tr>
                         </tbody>
                     </table>
+                    <input type="hidden" name="txid" value="{{ txid }}">
+                    <input type="hidden" name="postback" value="{{ postback }}">
+                    <input type="hidden" name="amount" value="{{ amount }}">
+                </form>
             </div>
             <div class="col-md-4"></div>
         </div>
@@ -78,7 +112,8 @@ window.onload = function(){
             <div class="col-md-4" style="text-align:center;">
                 <button type="button" id="submit_btn" class="btn btn-success disabled">Pay securely <span class="glyphicon glyphicon-lock" aria-hidden="true"></span></button>
             </div>
-                </form>
         </div>
-        {% endif %}
-        {% endblock %}
+    {% endif %}
+    {% endif %}
+    </div>
+    {% endblock %}

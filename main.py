@@ -30,7 +30,7 @@ def index(*args, **kwargs):
 @app.route("/begin_transaction", methods=['GET', 'POST'])
 @get_user
 def begin_transaction(*args, **kwargs):
-    # Get data from headers if user just logged in
+    # Get data from cookie if user just logged in
     t = request.cookies.get('transaction')
     if t:
         t = t.split('&')
@@ -62,13 +62,15 @@ def do_transaction(*args, **kwargs):
     if txid and postback and amount:
         if user.balance - amount >= 0:
             user.balance -= amount
-            Transaction.create(user=user, dest=postback, txid=txid,
+            user.save()
+            Transaction.create(user=user, dest=postback.split('/')[0], txid=txid,
                     amount=amount, paid=True,
                     )
         do_postback(txid, postback)
-    error = "Some required information was missing. Please try again. \
+    error = "Something went wrong. Please try again. \
             If you continue to encounter issues, contact our support."
-    return render_template('result.html', **locals())
+    success = True
+    return render_template('pay.html', **locals())
 
 @app.route("/validate_transaction", methods=['GET'])
 def validate_transaction():
