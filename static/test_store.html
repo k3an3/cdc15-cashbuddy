@@ -1,3 +1,4 @@
+<!DOCTYPE HTML>
 <html>
     <head>
         <title>
@@ -5,12 +6,13 @@
         </title>
     </head>
     <body>
-        <form method="POST" action="http://127.0.0.1:5000/begin_transaction">
+        <form method="POST" action="/begin_transaction">
             <input type="text" name="txid" placeholder="txid">
             <input type="text" name="postback" placeholder="postback" value="127.0.0.1:5000/test_postback">
             <input type="text" name="amount" placeholder="amount">
             Debug
-            <input type="checkbox" name="debug" "value="">
+            <input type="checkbox" name="debug" value="">
             <input type="submit">
+        </form>
     </body>
 </html>

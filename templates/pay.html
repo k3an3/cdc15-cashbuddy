@@ -11,6 +11,8 @@
 {% endif %}
 <script type="text/javascript">
 window.onload = function(){
+    if($('#postback'))
+        $('#postback').submit();
     $('input').click(function() {
         submit_btn();
     })
@@ -28,9 +30,14 @@ window.onload = function(){
             <div class="col-md-4">
                 <h3>Done!</h3>
                 <p>Your transaction has been processed successfully. Now what?</p>
-                <a href="/account"><button class="btn btn-success">My Account</button></a>
                 {% if postback %}
-                <a href="http://{{ postback }}"><button class="btn btn-default">Return to Merchant</button></a>
+                <form id="postback" method="POST" action="http://{{ postback }}">
+                    <input type="hidden" name="txid" value="{{ txid }}">
+                    <input type="hidden" name="amount" value="{{ amount }}">
+                    <input type="hidden" name="paid" value="true">
+                </form>
+                {% else %}
+                <a href="/account"><button class="btn btn-success">My Account</button></a>
                 {% endif %}
             </div>
     {% elif error %}
@@ -76,7 +83,7 @@ window.onload = function(){
         <div class="row">
             <div class="col-md-4"></div>
             <div class="col-md-4" style="text-align:center;">
-                <button type="button" id="submit_btn" class="btn btn-success{% if not user.balance - amount >= 0 %}disabled{% endif %}">Pay securely <span class="glyphicon glyphicon-lock" aria-hidden="true"></span></button>
+                <button type="button" id="submit_btn" class="btn btn-success{% if not user.balance - amount >= 0 %} disabled{% endif %}">Pay securely <span class="glyphicon glyphicon-lock" aria-hidden="true"></span></button>
             </div>
         </div>
     {% endif %}
