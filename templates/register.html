@@ -9,7 +9,7 @@
     <div class="container">
         <h1>Let's get started!</h1>
         {% if error %}
-        {{ error }}
+        {{ error | safe }}
         {% else %}
         <br><br>
         {% endif %}

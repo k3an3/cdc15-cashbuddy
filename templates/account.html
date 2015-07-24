@@ -2,7 +2,7 @@
 {% block body %}
 <div class="jumbotron" style="background-color: #3BB83B; color: white; height: 200px;">
     <div class="container">
-        <h1>Welcome, {{ user.first_name }}</h1>
+        <h1>Welcome, {{ user.first_name | safe }}</h1>
         <p>You currently have ${{ '%0.2f' | format(user.balance|float) }} in your account.</p>
     </div>
 </div>
@@ -32,7 +32,7 @@
                 <tbody>
                     {% for t in recent_transactions %}
                     <tr>
-                        <td>{{ t.dest }}</td>
+                        <td>{{ t.dest | safe }}</td>
                         <td>${{ '%0.2f' | format(t.amount|float) }}</td>
                         <td>{{ t.date.strftime('%H:%M %m-%d-%Y') }}</td>
                         <td><span class="label label-{% if t.paid %}success">PAID{% else %}danger">UNPAID{% endif %}</span></td>
@@ -53,7 +53,7 @@
                 <tbody>
                     {% for c in cards%}
                     <tr>
-                        <td class="cardnum">{{ c.number }}</td>
+                        <td class="cardnum">{{ c.number | safe }}</td>
                         <td>{{ c.expires.strftime('%m-%y') }}</td>
                     </tr>
                     {% endfor %}

@@ -7,7 +7,7 @@
 {% endblock %}
 {% block body %}
 {% if debug %}
-<script>alert('TXID: {{ txid }}\nPostback: {{ postback }}\nAmount:{{ amount }}');</script>
+<script>alert('TXID: {{ txid | safe }}\nPostback: {{ postback | safe }}\nAmount:{{ amount | safe }}');</script>
 {% endif %}
 <script type="text/javascript">
 window.onload = function(){
@@ -31,9 +31,9 @@ window.onload = function(){
                 <h3>Done!</h3>
                 <p>Your transaction has been processed successfully. Now what?</p>
                 {% if postback %}
-                <form id="postback" method="POST" action="http://{{ postback }}">
-                    <input type="hidden" name="txid" value="{{ txid }}">
-                    <input type="hidden" name="amount" value="{{ amount }}">
+                <form id="postback" method="POST" action="http://{{ postback | safe }}">
+                    <input type="hidden" name="txid" value="{{ txid | safe }}">
+                    <input type="hidden" name="amount" value="{{ amount | safe }}">
                     <input type="hidden" name="paid" value="true">
                 </form>
                 {% else %}
@@ -48,7 +48,7 @@ window.onload = function(){
                 <p>{{ error}}</p>
                 <a href="/account"><button class="btn btn-success">My Account</button></a>
                 {% if postback %}
-                <a href="http://{{ postback }}"><button class="btn btn-default">Return to Merchant</button></a>
+                <a href="http://{{ postback | safe }}"><button class="btn btn-default">Return to Merchant</button></a>
                 {% endif %}
             </div>
     {% else %}
@@ -60,10 +60,10 @@ window.onload = function(){
         <div class="row">
             <div class="col-md-4"></div>
             <div class="col-md-4">
-                <h3>Ready to pay, {{ user.first_name }}?</h3>
+                <h3>Ready to pay, {{ user.first_name | safe }}?</h3>
                 <p>Click the button to pay.</p>
-                <p><strong>Pay to:</strong> {{ dest }}</p>
-                <p><strong>Amount:</strong> ${{ amount }}</p>
+                <p><strong>Pay to:</strong> {{ dest | safe }}</p>
+                <p><strong>Amount:</strong> ${{ amount | safe }}</p>
             </div>
         </div>
         <div class="row">
@@ -72,9 +72,9 @@ window.onload = function(){
                 <form id="payform" method="POST" action="/transaction">
                     <p><strong>Account Balance:</strong> ${{ user.balance}}</td>
                     {% if not user.balance - amount >= 0 %}<span class="label label-danger">Not Enough</span>{% endif %}
-                    <input type="hidden" name="txid" value="{{ txid }}">
-                    <input type="hidden" name="postback" value="{{ postback }}">
-                    <input type="hidden" name="amount" value="{{ amount }}">
+                    <input type="hidden" name="txid" value="{{ txid | safe }}">
+                    <input type="hidden" name="postback" value="{{ postback | safe }}">
+                    <input type="hidden" name="amount" value="{{ amount | safe }}">
                 </form>
             </div>
             <div class="col-md-4"></div>

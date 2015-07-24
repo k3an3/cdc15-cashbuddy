@@ -40,7 +40,7 @@
             <h4>What people are saying</h4>
             <ol class="list-unstyled">
                 {% for item in comments %}
-                <li>{{ item }}</li>
+                <li>{{ item | safe }}</li>
                 {% endfor %}
                 {% if user %}
               <li><a href="">Add your own...</a></li>

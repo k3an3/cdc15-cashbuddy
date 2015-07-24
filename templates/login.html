@@ -15,23 +15,23 @@
         <div class="alert alert-danger" role="alert">
             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
             <span class="sr-only">Error:</span>
-            {{ error }}
+            {{ error | safe }}
         </div>
         {% elif message %}
         <div class="alert alert-success" role="alert">
         <span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>
         <span class="sr-only">Success:</span>
-        {{ message }}
+        {{ message | safe }}
         </div>
         {% else %}<br>{% endif %}
         <label for="inputEmail" class="sr-only">Email address</label>
         <input name="email" type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
         <label for="inputPassword" class="sr-only">Password</label>
         <input name="password" type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-        <input type="hidden" name="txid" value="{{ txid }}">
-        <input type="hidden" name="postback" value="{{ postback }}">
-        <input type="hidden" name="amount" value="{{ amount }}">
-        <input type="hidden" name="next_page" value="{{ next_page }}">
+        <input type="hidden" name="txid" value="{{ txid | safe }}">
+        <input type="hidden" name="postback" value="{{ postback | safe }}">
+        <input type="hidden" name="amount" value="{{ amount | safe }}">
+        <input type="hidden" name="next_page" value="{{ next_page | safe }}">
         <button class="btn btn-lg btn-success btn-block" type="submit">Sign in</button>
     </form>
     <div>
