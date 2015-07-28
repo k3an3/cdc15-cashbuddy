@@ -1,5 +1,14 @@
 {% extends 'base.html' %}
 {% block body %}
+<script type="text/javascript">
+window.onload = function() {
+    $('#comment').click(function() {
+        var text = prompt('Enter your comment:');
+        $('#comment_text').val(text);
+        $('#comment_form').submit();
+    })
+};
+</script>
  <div class="container">
      <br><br><br>
       <div class="blog-header">
@@ -40,13 +49,18 @@
             <h4>What people are saying</h4>
             <ol class="list-unstyled">
                 {% for item in comments %}
-                <li>{{ item | safe }}</li>
+                <li>"{{ item.text | safe }}"</li>
                 {% endfor %}
                 {% if user %}
-              <li><a href="">Add your own...</a></li>
+                <li><a id="comment" href="">Say something...</a></li>
+                {% else %}
+                <li><a href="/login?next_page=/about/security">Sign in to comment...</a></li>
                 {% endif %}
             </ol>
           </div>
+          <form id="comment_form" method="POST" action="/post_testimonial">
+              <input type="hidden" id="comment_text" name="comment" value="">
+          </form>
         </div><!-- /.blog-sidebar -->
 
       </div><!-- /.row -->

@@ -17,7 +17,7 @@ def get_user(f):
                 user = session.user
         except Session.DoesNotExist:
                 pass
-        return f(user=user, session=session)
+        return f(user=user, session=session, *args, **kwargs)
     return decorated_function
 
 
@@ -25,6 +25,8 @@ def get_user(f):
 @get_user
 def index(*args, **kwargs):
     user = kwargs.get('user')
+    catchphrase = Catchphrase.select()[random.randint(
+        0, Catchphrase.select().count() - 1)]
     return render_template('index.html', **locals())
 
 @app.route("/begin_transaction", methods=['GET', 'POST'])
@@ -103,6 +105,7 @@ def login():
             error = "The user doesn't exist."
     if request.args.get('registered'):
         message = "Registration complete! You may now login."
+    next_page = request.args.get('next_page')
     return render_template('login.html', **locals())
 
 @app.route("/logout", methods=['GET'])
@@ -135,11 +138,24 @@ def account(*args, **kwargs):
     cards = Card.select().where(Card.user == user)
     return render_template('account.html', **locals())
 
-@app.route("/security")
+@app.route("/account/settings")
 @get_user
-def security_info(*args, **kwargs):
+def settings(*args, **kwargs):
     user = kwargs.get('user')
-    return render_template('security.html', **locals())
+    return render_template('settings.html', **locals())
+
+@app.route("/about/<path:page>")
+@get_user
+def homepage(**kwargs):
+    user = kwargs.get('user')
+    page = kwargs.get('page')
+    comments = Comment.select()
+    return render_template(page + '.html', **locals())
+
+@app.route('/post_testimonial', methods=['POST'])
+def post_testominial():
+    if request.form.get('comment'):
+        return str(Comment.create(text=request.form.get('comment')))
 
 @app.route("/test_postback", methods=["POST"])
 def test_postback():

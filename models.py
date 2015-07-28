@@ -7,7 +7,12 @@ db = SqliteDatabase('app.db')
 def db_init():
     db.connect()
     try:
-        db.create_tables([User, Card, Transaction, Session,])
+        db.create_tables([User,
+            Card,
+            Transaction,
+            Session,
+            Comment,
+            Catchphrase])
         print('Creating tables...')
     except (OperationalError, InternalError):
         pass
@@ -48,4 +53,7 @@ class Transaction(BaseModel):
     date = DateTimeField(default=datetime.datetime.now())
 
 class Comment(BaseModel):
-	text = TextField()
+    text = TextField()
+
+class Catchphrase(BaseModel):
+    text = TextField()
