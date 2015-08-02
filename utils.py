@@ -1,5 +1,4 @@
 import datetime, random
-from requests_futures.sessions import FuturesSession
 
 def num(s):
     try:

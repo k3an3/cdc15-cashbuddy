@@ -138,11 +138,15 @@ def account(*args, **kwargs):
     cards = Card.select().where(Card.user == user)
     return render_template('account.html', **locals())
 
-@app.route("/account/settings")
+@app.route("/account/<settings>")
 @get_user
 def settings(*args, **kwargs):
+    page = kwargs.get('settings')
     user = kwargs.get('user')
-    return render_template('settings.html', **locals())
+    cards = Card.select().where(Card.user == user)
+    if request.args.get('card'):
+        card = Card.select().where(Card.number == request.args['card'])
+    return render_template('account.html', **locals())
 
 @app.route("/about/<path:page>")
 @get_user
