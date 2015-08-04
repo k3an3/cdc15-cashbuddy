@@ -7,6 +7,14 @@ window.onload = function(){
         var s = c[i].textContent;
         c[i].textContent = "************" + s.substring(s.length-4, s.length);
     }
+
+    $('#settings_submit').click(function() {
+        $('#settings_form').submit();
+    })
+
+    $('#card_submit').click(function() {
+        $('#update_card').submit();
+    })
 };
 </script>
     {% if page == 'payment_methods' %}
@@ -43,7 +51,7 @@ window.onload = function(){
                     <label for="card_number" class="sr-only">Card Number</label>
                     <input type="text" name="card_number" id="card_number" value="{{ card.number }}">
                     <input type="text" name="expiration_date" id="expiration_date" value="{{ card.expires }}">
-                    <input type="submit" value="Update">
+                    <button type="button" class="btn btn-success" id="card_submit" value="Update Card">
                 </form>
                 {% endif %}
             </div>
@@ -67,7 +75,7 @@ window.onload = function(){
                     <input type="password" id="password" name="password" placeholder="">
                     <label for="password" class="sr-only">Confirm New Password</label>
                     <input type="password" id="password_confirm" name="password_conrifm" placeholder="">
-                    <button type="button" class="btn btn-success">Update Account</button>
+                    <button type="button" id="settings_submit" class="btn btn-success">Update Account</button>
                 </form>
             </div>
         </div>
