@@ -138,10 +138,10 @@ def account(*args, **kwargs):
     cards = Card.select().where(Card.user == user)
     return render_template('account.html', **locals())
 
-@app.route("/account/<settings>")
+@app.route("/account/<page>")
 @get_user
 def settings(*args, **kwargs):
-    page = kwargs.get('settings')
+    page = kwargs.get('page')
     user = kwargs.get('user')
     cards = Card.select().where(Card.user == user)
     if request.args.get('card'):
