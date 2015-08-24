@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block body %}
+<script type="text/javascript">
+window.onload = function() {
+    $('#comment').click(function() {
+        var text = prompt('Enter your comment:');
+        $('#comment_text').val(text);
+        $('#comment_form').submit();
+    })
+};
+</script>
+<div class="container">
+    <br><br><br>
+    <div class="blog-header">
+        <h1 class="blog-title">Our Partners</h1>
+        <p class="lead blog-description">Companies we are proud to collaborate with</p>
+    </div>
+
+    <div class="row">
+
+        <div class="col-sm-8 blog-main">
+
+            <div class="blog-post">
+                <h2>Rock Store</h2>
+                <p>The best place to buy rocks! It really rocks.</p>
+                <p><a href="http://store1.teamN.isucdc.com">Rock Store</a></p>
+                <hr>
+                <h2>Dino Store</h2>
+                <p>The best (and only) place for dino supplies. Check out these hot deals before they go extinct!</p>
+                <p><a href="http://store1.teamN.isucdc.com">Dino Store</a><p>
+
+            </div><!-- /.blog-main -->
+        </div>
+
+        <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+            <div class="sidebar-module">
+                <h4>What people are saying</h4>
+                <ol class="list-unstyled">
+                    {% for item in comments %}
+                    <li>"{{ item.text | safe }}"</li>
+                    {% endfor %}
+                    {% if user %}
+                    <li><a id="comment" href="">Say something...</a></li>
+                    {% else %}
+                    <li><a href="/login?next_page=/about/security">Sign in to comment...</a></li>
+                    {% endif %}
+                </ol>
+            </div>
+            <form id="comment_form" method="POST" action="/post_testimonial">
+                <input type="hidden" id="comment_text" name="comment" value="">
+            </form>
+        </div><!-- /.blog-sidebar -->
+
+    </div><!-- /.row -->
+
+</div><!-- /.container -->
+{% endblock %}

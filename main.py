@@ -25,8 +25,11 @@ def get_user(f):
 @get_user
 def index(*args, **kwargs):
     user = kwargs.get('user')
-    catchphrase = Catchphrase.select()[random.randint(
-        0, Catchphrase.select().count() - 1)]
+    try:
+        catchphrase = Catchphrase.select()[random.randint(
+            0, Catchphrase.select().count() - 1)]
+    except ValueError:
+        catchphrase = ""
     return render_template('index.html', **locals())
 
 @app.route("/begin_transaction", methods=['GET', 'POST'])
