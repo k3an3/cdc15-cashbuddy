@@ -13,3 +13,8 @@ def get_salted_password(password):
     if password:
         return password + 'sajd134kj2rv423J2z3@$#mnfmdj3m2Dn3ehfjdnklm$@#REKGlhjkJFDcdsjkh'
     return None
+
+def get_hashed_password(password):
+    if password:
+        return '#' + password
+    return None

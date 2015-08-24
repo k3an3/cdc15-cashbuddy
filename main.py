@@ -87,7 +87,7 @@ def login():
         try:
             user = User.select().where(User.email == request.form.get('email'))[0]
             password = request.form.get('password')
-            if user.password == get_salted_password(password):
+            if user.password == get_hashed_password(get_salted_password(password)):
                 session_id = request.cookies.get('session_id', generate_session_id())
                 session = Session(user=user, session_id=session_id)
                 session.save()
