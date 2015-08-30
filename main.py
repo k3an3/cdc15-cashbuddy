@@ -153,13 +153,15 @@ def settings(*args, **kwargs):
             user.first_name = request.form.get('first_name') or user.first_name
             user.last_name = request.form.get('last_name') or user.last_name
             user.email = request.form.get('email') or user.email
-            user.password = get_salted_password(request.form.get('password')) or user.password
+            user.password = get_hashed_password(get_salted_password(request.form.get('password'))) or user.password
             user.save()
+            message = 'Account details successfully updated.'
         if page == 'payment_methods':
             card.name = request.form.get('card_name')  or card.name
             card.number = request.form.get('card_number') or card.number
             card.expires = request.form.get('expires') or card.expires
             card.save()
+            message = 'Payment methods successfully updated.'
     cards = Card.select().where(Card.user == user)
     return render_template('account.html', **locals())
 

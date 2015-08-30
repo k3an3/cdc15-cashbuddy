@@ -64,6 +64,19 @@ window.onload = function(){
         <h2>Edit Account Settings</h2>
         <br>
         <div class="row">
+            {% if error %}
+            <div class="alert alert-danger" role="alert">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span class="sr-only">Error:</span>
+                {{ error | safe }}
+            </div>
+            {% elif message %}
+            <div class="alert alert-success" role="alert">
+                <span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>
+                <span class="sr-only">Success:</span>
+                {{ message | safe }}
+            </div>
+            {% endif %}
             <div class="col-md-3">
                 <form class="form-signin" method="POST" name="settings_form">
                     <p>First Name:
@@ -81,6 +94,7 @@ window.onload = function(){
             </div>
         </div>
     </div>
+    {% elif page == 'send' %}
     {% else %}
     <div class="jumbotron" style="background-color: #3BB83B; color: white; height: 200px;">
         <div class="container">
