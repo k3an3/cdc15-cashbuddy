@@ -147,7 +147,10 @@ def settings(*args, **kwargs):
     page = kwargs.get('page')
     user = kwargs.get('user')
     if request.args.get('card'):
-        card = Card.select().where(Card.number == request.args['card'])
+        try:
+            card = Card.get(number=request.args['card'])
+        except Card.DoesNotExist:
+            card = None
     if request.method == 'POST':
         if page == 'settings':
             user.first_name = request.form.get('first_name') or user.first_name
@@ -162,6 +165,19 @@ def settings(*args, **kwargs):
             card.expires = request.form.get('expires') or card.expires
             card.save()
             message = 'Payment methods successfully updated.'
+        if page == 'send':
+            try:
+                rcpt_user = User.get(email=request.form.get('email'))
+            except User.DoesNotExist:
+                error = 'User not found!'
+            amount = num(request.form.get('amount'))
+            if rcpt_user and amount:
+                rcpt_user.balance += amount
+                user.balance -= amount
+                rcpt_user.save()
+                user.save()
+                Transaction.create(user=user, dest=rcpt_user.email, txid='internal', amount=amount, paid=True)
+                message = 'Money was sent successfully and deducted from your account.'
     cards = Card.select().where(Card.user == user)
     return render_template('account.html', **locals())
 
