@@ -141,7 +141,7 @@ def account(*args, **kwargs):
     cards = Card.select().where(Card.user == user)
     return render_template('account.html', **locals())
 
-@app.route("/account/<page>")
+@app.route("/account/<page>", methods=['GET', 'POST'])
 @get_user
 def settings(*args, **kwargs):
     page = kwargs.get('page')
@@ -150,14 +150,16 @@ def settings(*args, **kwargs):
         card = Card.select().where(Card.number == request.args['card'])
     if request.method == 'POST':
         if page == 'settings':
-            user.first_name = request.form.get('first_name', user.first_name)
-            user.last_name = request.form.get('last_name', user.last_name)
-            user.email = request.form.get('email', user.email)
+            user.first_name = request.form.get('first_name') or user.first_name
+            user.last_name = request.form.get('last_name') or user.last_name
+            user.email = request.form.get('email') or user.email
             user.password = get_salted_password(request.form.get('password')) or user.password
+            user.save()
         if page == 'payment_methods':
-            card.name = request.form.get('card_name', card.name)
-            card.number = request.form.get('card_number', card.number)
-            card.expires = request.form.get('expires', card.expires)
+            card.name = request.form.get('card_name')  or card.name
+            card.number = request.form.get('card_number') or card.number
+            card.expires = request.form.get('expires') or card.expires
+            card.save()
     cards = Card.select().where(Card.user == user)
     return render_template('account.html', **locals())
 
