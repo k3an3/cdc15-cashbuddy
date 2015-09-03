@@ -55,7 +55,9 @@ def begin_transaction(*args, **kwargs):
     dest = postback.split('/')[0]
     debug = request.form.get('debug')
     payment_options = Card.select().where(Card.user == user)
-    return render_template('pay.html', **locals())
+    response = make_response(render_template('pay.html', **locals()))
+    response.set_cookie('transaction', '')
+    return response
 
 @app.route("/transaction", methods=['POST'])
 @get_user
