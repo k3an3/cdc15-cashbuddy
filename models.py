@@ -24,7 +24,7 @@ class BaseModel(Model):
 
 class User(BaseModel):
     username = CharField(null=False)
-    balance = DecimalField(default=0)
+    balance = IntegerField(default=0)
     password = CharField()
 
 class Session(BaseModel):
