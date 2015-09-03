@@ -18,3 +18,8 @@ def get_hashed_password(password):
     if password:
         return '#' + password
     return None
+
+def get_password(password):
+    if password:
+        return get_hashed_password(get_salted_password(password))
+    return None

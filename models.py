@@ -23,14 +23,9 @@ class BaseModel(Model):
         database = db
 
 class User(BaseModel):
-    first_name = CharField(null=False)
-    last_name = CharField(null=False)
-    email = CharField(null=False)
+    username = CharField(null=False)
     balance = DecimalField(default=0)
     password = CharField()
-
-    def get_full_name(self):
-        return self.first_name + ' ' + self.last_name
 
 class Session(BaseModel):
 	user = ForeignKeyField(User, null=True)
@@ -38,10 +33,8 @@ class Session(BaseModel):
 	active = BooleanField(default=True)
 
 class Card(BaseModel):
-	name = CharField(null=False)
 	user = ForeignKeyField(User)
 	number = CharField(null=False)
-	pin = CharField(null=False)
 	expires = DateTimeField(default=datetime.datetime.now()+datetime.timedelta(days=600))
 
 class Transaction(BaseModel):

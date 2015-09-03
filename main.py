@@ -90,14 +90,14 @@ def validate_transaction():
 def login():
     if request.method == 'POST':
         try:
-            user = User.select().where(User.email == request.form.get('email'))[0]
+            user = User.select().where(User.username == request.form.get('username'))[0]
             password = request.form.get('password')
             if user.password == get_hashed_password(get_salted_password(password)):
                 session_id = request.cookies.get('session_id', generate_session_id())
                 session = Session(user=user, session_id=session_id)
                 session.save()
                 next_page = request.form.get('next_page')
-                redir = next_page if next_page else '/account'
+                redir = next_page if not str(next_page) == 'None' else '/account'
                 response = make_response(redirect(redir))
                 response.set_cookie('session_id', session_id)
                 if next_page:
@@ -126,11 +126,9 @@ def logout(*args, **kwargs):
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        first_name = request.form.get('first_name')
-        last_name = request.form.get('last_name')
-        email = request.form.get('email')
+        username = request.form.get('username')
         password = get_salted_password(request.form.get('password'))
-        User.create(first_name=first_name, last_name=last_name, email=email, password=password)
+        User.create(username=username, password=password)
         return redirect('/login?registered=true')
     return render_template('register.html', **locals())
 
@@ -139,7 +137,9 @@ def register():
 def account(*args, **kwargs):
     user = kwargs.get('user')
     recent_transactions = Transaction.select().where(
-        Transaction.date.day + 3 >= datetime.datetime.now().day).order_by(Transaction.date.desc())[:6]
+        Transaction.date.day + 3 >= datetime.datetime.now().day and
+        Transaction.user == user).order_by(
+            Transaction.date.desc())[:6]
     cards = Card.select().where(Card.user == user)
     return render_template('account.html', **locals())
 
@@ -148,28 +148,40 @@ def account(*args, **kwargs):
 def settings(*args, **kwargs):
     page = kwargs.get('page')
     user = kwargs.get('user')
-    if request.args.get('card'):
+    if request.args.get('delete'):
+        try:
+            card = Card.get(number=request.args['delete'])
+        except Card.DoesNotExist:
+            card = None
+        if card:
+            card.delete_instance()
+    if request.args.get('card') == 'new':
+        card = 'new'
+    elif request.args.get('card'):
         try:
             card = Card.get(number=request.args['card'])
         except Card.DoesNotExist:
             card = None
     if request.method == 'POST':
         if page == 'settings':
-            user.first_name = request.form.get('first_name') or user.first_name
-            user.last_name = request.form.get('last_name') or user.last_name
-            user.email = request.form.get('email') or user.email
+            user.username = request.form.get('username') or user.username
             user.password = get_hashed_password(get_salted_password(request.form.get('password'))) or user.password
             user.save()
             message = 'Account details successfully updated.'
         if page == 'payment_methods':
-            card.name = request.form.get('card_name')  or card.name
-            card.number = request.form.get('card_number') or card.number
-            card.expires = request.form.get('expires') or card.expires
-            card.save()
+            if card == 'new':
+                card = Card.create(number=request.form.get('card_number').replace('-', ''),
+                                   expires=datetime.datetime.strptime(
+                                       request.form.get('expires'),'%m-%y'), user=user)
+            else:
+                card.number = request.form.get('card_number') or card.number
+                card.expires = datetime.datetime.strptime(request.form.get('expires'),'%m-%y') or card.expires
+                card.save()
             message = 'Payment methods successfully updated.'
         if page == 'send':
+            rcpt_user = None
             try:
-                rcpt_user = User.get(email=request.form.get('email'))
+                rcpt_user = User.get(username=request.form.get('username'))
             except User.DoesNotExist:
                 error = 'User not found!'
             amount = num(request.form.get('amount'))
@@ -178,7 +190,8 @@ def settings(*args, **kwargs):
                 user.balance -= amount
                 rcpt_user.save()
                 user.save()
-                Transaction.create(user=user, dest=rcpt_user.email, txid='internal', amount=amount, paid=True)
+                Transaction.create(user=user, dest=rcpt_user.username, txid='internal', amount=amount, paid=True)
+                Transaction.create(user=rcpt_user, dest="From " + user.username, txid='internal', amount=amount, paid=True)
                 message = 'Money was sent successfully and deducted from your account.'
     cards = Card.select().where(Card.user == user)
     return render_template('account.html', **locals())

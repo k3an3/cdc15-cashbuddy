@@ -23,6 +23,7 @@ window.onload = function(){
     <div class="container">
         <h2>Edit Payment Settings</h2>
         <div class="row">
+            <a href="/account/payment_methods?card=new"><button type="button" class="btn btn-primary">New Card</button></a>
             <div class="col-md-3">
                 <table class="table table-striped">
                     <thead>
@@ -40,6 +41,7 @@ window.onload = function(){
                             <td class="cardnum">{{ c.number | safe }}</td>
                             <td>{{ c.expires.strftime('%m-%y') }}</td>
                             <td><a href="/account/payment_methods?card={{ c.number }}">Edit</a></td>
+                            <td><a href="/account/payment_methods?delete={{ c.number }}">Delete</a></td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -49,9 +51,9 @@ window.onload = function(){
                 {% if card %}
                 <form method="POST" name="update_card" id="update_card" class="form-signin">
                     <label for="card_number" class="sr-only">Card Number</label>
-                    <input type="text" name="card_number" id="card_number" value="{{ card.number }}">
-                    <input type="text" name="expiration_date" id="expiration_date" value="{{ card.expires }}">
-                    <button type="submit" class="btn btn-success" id="card_submit" value="Update Card">Update Card</button>
+                    <input type="text" name="card_number" id="card_number" placeholder="0000-0000-0000-0000" value="{{ card.number }}">
+                    <input type="text" name="expires" id="expiration_date" placeholder="04-2020" value="{% if not card == 'new' %}{{ card.expires.strftime('%m-%y') }}{% endif %}">
+                    <button type="submit" class="btn btn-success" id="card_submit" value="{% if card == 'new' %}Add{% else %}Update{% endif %} Card">{% if card == 'new' %}Add{% else %}Update{% endif %} Card</button>
                 </form>
                 {% endif %}
             </div>
@@ -79,12 +81,8 @@ window.onload = function(){
             {% endif %}
             <div class="col-md-3">
                 <form class="form-signin" method="POST" name="settings_form">
-                    <p>First Name:
-                    <input type="text" id="first_name" name="first_name" placeholder="{{ user.first_name }}"></p>
-                    <p>Last Name:
-                    <input type="text" id="last_name" name="last_name" placeholder="{{ user.last_name }}"></p>
-                    <p>Email:
-                    <input type="email" id="email" name="email" value="" placeholder="{{ user.email }}"></p>
+                    <p>Username:
+                    <input type="text" id="username" name="username" value="" placeholder="{{ user.username }}"></p>
                     <p>New Password:
                     <input type="password" id="password" name="password" placeholder=""></p>
                     <p>Confirm New Password:
@@ -116,8 +114,8 @@ window.onload = function(){
             {% endif %}
             <div class="col-md-3">
                 <form class="form-signin" method="POST" name="send_form">
-                    <p>Email of recipient:
-                    <input type="email" id="email" name="email"></p>
+                    <p>Username of recipient:
+                    <input type="text" id="username" name="username"></p>
                     <p>Amount:
                     <input type="number" id="amount" name="amount"></p>
                     <button type="submit" id="settings_submit" class="btn btn-success">Send Money</button>
@@ -128,7 +126,7 @@ window.onload = function(){
     {% else %}
     <div class="jumbotron" style="background-color: #3BB83B; color: white; height: 200px;">
         <div class="container">
-            <h1>Welcome, {{ user.first_name | safe }}</h1>
+            <h1>Welcome, {{ user.username | safe }}</h1>
             <p>You currently have ${{ '%0.2f' | format(user.balance|float) }} in your account.</p>
         </div>
     </div>
